@@ -21,10 +21,18 @@ set_target_properties(
     PyDeviceManager
     PROPERTIES
         PREFIX ""
-        SUFFIX ".pyd" # Win32 https://stackoverflow.com/questions/31038963/how-do-you-rename-a-library-filename-in-cmake
+        
         OUTPUT_NAME "DeviceManager"
         LINKER_LANGUAGE C # Egal ob hier C oder CXX steht
+)
+
+if (WIN32)
+    set_target_properties(
+        PyDeviceManager
+        PROPERTIES
+            SUFFIX ".pyd" # Win32 https://stackoverflow.com/questions/31038963/how-do-you-rename-a-library-filename-in-cmake
     )
+endif()
 
 
 #set_target_properties(
