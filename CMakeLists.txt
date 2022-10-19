@@ -14,6 +14,7 @@ target_include_directories(DeviceManager PUBLIC
 )
 
 add_subdirectory(Examples)
+add_subdirectory(PyModule)
 
 if (WIN32)
     target_include_directories(DeviceManager PUBLIC "C:\\TwinCAT\\AdsApi\\TcAdsDll\\Include")
