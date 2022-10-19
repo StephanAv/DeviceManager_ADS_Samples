@@ -14,16 +14,19 @@ add_library(PyDeviceManager SHARED ${SRCS})
 
 #find_package(PythonLibs REQUIRED)
 include_directories(${PYTHON_INCLUDE_DIRS})
-#target_link_libraries(PyDebug ${PYTHON_LIBRARIES})
+target_link_libraries(PyDeviceManager ${PYTHON_LIBRARIES})
 
 # das wird benötigt
 set_target_properties(
     PyDeviceManager
     PROPERTIES
         PREFIX ""
+        SUFFIX ".pyd" # Win32 https://stackoverflow.com/questions/31038963/how-do-you-rename-a-library-filename-in-cmake
         OUTPUT_NAME "DeviceManager"
         LINKER_LANGUAGE C # Egal ob hier C oder CXX steht
     )
+
+
 #set_target_properties(
 #    PyDebug
 #    PROPERTIES
