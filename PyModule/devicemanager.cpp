@@ -1,5 +1,7 @@
 #include <Python.h>
-
+#include "cpu.h"
+#include "modsupport.h"
+#include "object.h"
 
 typedef struct {
     PyObject_HEAD
@@ -40,5 +42,17 @@ PyInit_DeviceManager(void) {
 
     PyObject* module = PyModule_Create(&devman_module);
 
+    // Create and add CPU type
+    PyObject *cpu_type = PyType_FromSpec(&CpuType_spec);
+    if (cpu_type == NULL){
+        Py_DecRef(module);
+        return NULL;
+    }
+
+    if(PyModule_AddObject(module, "CPU", cpu_type) < 0){
+        Py_DECREF(cpu_type);
+        Py_DECREF(module);
+        return NULL;
+    }
     return module;
 }
