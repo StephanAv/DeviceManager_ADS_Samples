@@ -13,10 +13,16 @@ find_package(PythonLibs REQUIRED)
 
 set(SRCS devicemanager.cpp types/cpu.cpp)
 add_library(PyDeviceManager SHARED ${SRCS})
+add_executable(PyDebug "debug.cpp")
 #add_library(PyDeviceManager SHARED )
 #find_package(PythonLibs REQUIRED)
 #include_directories(${PYTHON_INCLUDE_DIRS})
 #target_link_libraries(PyDeviceManager ${PYTHON_LIBRARIES})
+
+
+if (WIN32)
+    add_compile_definitions(USE_TWINCAT_ROUTER)
+endif()
 
 # das wird benötigt
 set_target_properties(
@@ -28,8 +34,16 @@ set_target_properties(
         LINK_LIBRARIES DeviceManager
         INCLUDE_DIRECTORIES "${PYTHON_INCLUDE_DIRS};${CMAKE_CURRENT_SOURCE_DIR}/types"
 )
-
-set(SRCS "devicemanager.cpp" "cpu.cpp")
+set_target_properties(
+    PyDebug
+    PROPERTIES
+        OUTPUT_NAME "PyDebug"
+        LINKER_LANGUAGE C # Egal ob hier C oder CXX steht
+        INCLUDE_DIRECTORIES "${PYTHON_INCLUDE_DIRS};${CMAKE_CURRENT_SOURCE_DIR}/tests"
+        LINK_LIBRARIES "${PYTHON_LIBRARIES}"
+)
+#;${CMAKE_SOURCE_DIR}/ADS
+#set(SRCS "devicemanager.cpp" "cpu.cpp")
 
 if (WIN32)
     set_target_properties(

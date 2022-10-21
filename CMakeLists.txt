@@ -6,7 +6,16 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_library(DeviceManager STATIC)
+option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+add_library(DeviceManager)
+#if (UNIX)
+#    add_library(DeviceManager SHARED)
+#elseif(WIN32)
+#    add_library(DeviceManager STATIC)
+#endif()
+
+
+
 add_subdirectory(Areas)
 
 target_include_directories(DeviceManager PUBLIC
@@ -37,30 +46,30 @@ elseif(UNIX) # Linux, FreeBSD or TwinCAT/BSD
     else()
         # Use the generic ADS Router from GitHub
 
-    # TODO: This dependency is in the wrong CMakeLists.txt in the Beckhoff/ADS repo
-    find_package(Threads)
+        # TODO: This dependency is in the wrong CMakeLists.txt in the Beckhoff/ADS repo
+        find_package(Threads)
 
-    include(FetchContent)
+        include(FetchContent)
 
-    FetchContent_Declare(
-	    Beckhoff_ADS
-	    GIT_REPOSITORY https://github.com/Beckhoff/ADS.git
-	    GIT_TAG        a2fcc332684a92786a1164f5891d719d299cb2f8 # v14 
-	    SOURCE_SUBDIR  AdsLib
-    )
+        FetchContent_Declare(
+            Beckhoff_ADS
+            GIT_REPOSITORY https://github.com/Beckhoff/ADS.git
+            GIT_TAG        a2fcc332684a92786a1164f5891d719d299cb2f8 # v14 
+            SOURCE_SUBDIR  AdsLib
+        )
 
-    FetchContent_MakeAvailable(Beckhoff_ADS)
+        FetchContent_MakeAvailable(Beckhoff_ADS)
 
-    
-    target_include_directories(DeviceManager PUBLIC "/usr/local/include")
-    target_link_directories(DeviceManager PRIVATE "/usr/local/lib")
+        
+        target_include_directories(DeviceManager PUBLIC "/usr/local/include")
+        target_link_directories(DeviceManager PRIVATE "/usr/local/lib")
 
-    list(APPEND includePath "${PROJECT_BINARY_DIR}" "${beckhoff_ads_SOURCE_DIR}/AdsLib")
-    
-    target_include_directories(DeviceManager PUBLIC
-      "$<BUILD_INTERFACE:${includePath}>"
-    )
-    target_link_libraries(DeviceManager PUBLIC ads)
+        list(APPEND includePath "${PROJECT_BINARY_DIR}" "${beckhoff_ads_SOURCE_DIR}/AdsLib")
+        
+        target_include_directories(DeviceManager PUBLIC
+        "$<BUILD_INTERFACE:${includePath}>"
+        )
+        target_link_libraries(DeviceManager PUBLIC ads)
 
     endif()
 endif()
