@@ -2,6 +2,9 @@
 #include <iostream>
 #include <cstddef>
 
+#include "get_attr.h"
+#include "test_cpu.h"
+
 int main(int argc, char *argv[], char *envp[])
 {
 
@@ -34,10 +37,8 @@ int main(int argc, char *argv[], char *envp[])
         PyErr_Print();
         return -1;
     }
-
-    //test_division(get_func(pmodule, "division"));
-    //test_setString(get_func(pmodule, "setString"));
-    //test_myclass(get_func(pmodule, "init"));
+    PyObject* Cpu = get_attr(pmodule, "CPU");
+    init_cpu(Cpu);
 
     return 0;
 }
