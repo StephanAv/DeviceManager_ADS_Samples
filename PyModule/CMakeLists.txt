@@ -11,7 +11,7 @@ find_package(PythonLibs REQUIRED)
 
 #add_executable(PyDebug "pydbg.cpp")
 
-set(SRCS devicemanager.cpp types/cpu.cpp)
+set(SRCS devicemanager.cpp types/py_cpu.cpp)
 add_library(PyDeviceManager SHARED ${SRCS})
 add_executable(PyDebug "debug.cpp")
 #add_library(PyDeviceManager SHARED )
@@ -32,14 +32,14 @@ set_target_properties(
         OUTPUT_NAME "DeviceManager"
         LINKER_LANGUAGE C # Egal ob hier C oder CXX steht
         LINK_LIBRARIES DeviceManager
-        INCLUDE_DIRECTORIES "${PYTHON_INCLUDE_DIRS};${CMAKE_CURRENT_SOURCE_DIR}/types"
+        INCLUDE_DIRECTORIES "${PYTHON_INCLUDE_DIRS};${CMAKE_CURRENT_SOURCE_DIR}/types" # vscode/codium does not recognize this
 )
 set_target_properties(
     PyDebug
     PROPERTIES
         OUTPUT_NAME "PyDebug"
         LINKER_LANGUAGE C # Egal ob hier C oder CXX steht
-        INCLUDE_DIRECTORIES "${PYTHON_INCLUDE_DIRS};${CMAKE_CURRENT_SOURCE_DIR}/tests"
+        INCLUDE_DIRECTORIES "/usr/include/python3.9;${PYTHON_INCLUDE_DIR};${CMAKE_CURRENT_SOURCE_DIR}/tests"
         LINK_LIBRARIES "${PYTHON_LIBRARIES}"
 )
 #;${CMAKE_SOURCE_DIR}/ADS

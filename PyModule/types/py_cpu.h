@@ -10,10 +10,18 @@
 //#include <methodobject.h>
 #include <tupleobject.h>
 #include <structmember.h>
+#include "cpu.h"
+
+#if defined(USE_TWINCAT_ROUTER)
+	#include "TC1000_AdsClient.h"
+#else
+	#include "GenericAdsClient.h"
+#endif
 
 typedef struct {
     PyObject_HEAD
-    int value;
+    BasicADS* m_ads;
+    std::optional<DeviceManager::CPU> m_cpu;
 } CpuType;
 
 
@@ -24,7 +32,7 @@ PyObject* getTemp(PyObject *self, PyObject *args);
 
 
 static struct PyMemberDef CpuType_member[] = {
-    {"value", T_INT, offsetof(CpuType, value)},
+    //{"value", T_INT, offsetof(CpuType, value)},
     {NULL} /* Sentinel */
 };
 
@@ -43,8 +51,12 @@ static PyType_Slot CpuType_slots[] = {
 
 static PyType_Spec CpuType_spec = {
     "CPU", // tp_name
-    sizeof(CpuType), // tp_basicsize
-    0, // tp_itemsize
+    #if defined(USE_TWINCAT_ROUTER)
+    sizeof(CpuType) + sizeof(TC1000AdsClient), // tp_basicsize
+#else
+    sizeof(CpuType) + sizeof(GenericAdsClient),
+#endif
+    0, // tp_itemsize : All instances have the same size
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
     CpuType_slots
 };

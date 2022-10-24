@@ -1,5 +1,5 @@
 #include <Python.h>
-#include "cpu.h"
+#include "py_cpu.h"
 #include "modsupport.h"
 #include "object.h"
 
