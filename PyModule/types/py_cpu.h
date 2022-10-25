@@ -18,6 +18,7 @@
 #else
 	#include "GenericAdsClient.h"
 #endif
+
 // https://cython.readthedocs.io/en/latest/src/userguide/extension_types.html
 typedef struct {
     PyObject_HEAD
@@ -30,7 +31,7 @@ typedef struct {
 
 int CpuType_init(PyObject *self, PyObject *args, PyObject *kwds);
 void CpuType_dealloc(CpuType *self);
-
+PyObject *CpuType_new(PyTypeObject *subtype, PyObject *args, PyObject *kwds);
 PyObject* getTemp(PyObject *self, PyObject *args);
 
 
@@ -46,6 +47,7 @@ static PyMethodDef CpuType_methods[] = {
 };
 
 static PyType_Slot CpuType_slots[] = {
+    {Py_tp_new, (void*)CpuType_new},
     {Py_tp_init, (void*)CpuType_init},
     {Py_tp_dealloc, (void*)CpuType_dealloc},
     {Py_tp_members, CpuType_member},

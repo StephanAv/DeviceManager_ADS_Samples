@@ -7,7 +7,7 @@
 #include "abstract.h"
 #include "object.h"
 
-PyObject* cpu_init(PyObject *pFunc){
+static PyObject* cpu_init(PyObject *pFunc){
 
     assert(pFunc);
 
@@ -34,15 +34,14 @@ PyObject* cpu_init(PyObject *pFunc){
 
 }
 
-void test_cpu_getTemp(PyObject *CPU){
+static void test_cpu_getTemp(PyObject *CPU){
     assert(CPU);
 
     PyObject *cpuTemperature = PyObject_CallMethodNoArgs(CPU, PyUnicode_FromString("getTemp"));
     if(!cpuTemperature){
         PyErr_Print();
     }
-    //PyObject* attrCpuTemp =
-    //PyObject *cpuTemperature = PyObject_CallMethod(CPU, "getTemp", NULL);
+
     if(PyLong_Check(cpuTemperature)){
         std::cout << "CPU temperature: " << PyLong_AsLong(cpuTemperature) << std::endl;
     }

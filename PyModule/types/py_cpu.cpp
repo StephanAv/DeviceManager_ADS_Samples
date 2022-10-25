@@ -2,12 +2,24 @@
 #include "object.h"
 #include "py_cpu.h"
 #include "ads_exception.h"
+#include "pyerrors.h"
 
+#include <cstdint>
 #include <iostream>
 #include <python3.9/unicodeobject.h> // ?
 #include <cassert>
 #include <stdexcept>
+#include "ads_py_error.h"
 
+PyObject *CpuType_new(PyTypeObject *type, PyObject *args, PyObject *kwds){
+    std::cout << "CpuType_new() called" << std::endl;
+    CpuType *self;
+        self = (CpuType *) type->tp_alloc(type, 0);
+        if (self != NULL) {
+            self->m_ads = NULL;
+        }
+       return (PyObject*) self;
+}
 
 int CpuType_init(PyObject *self, PyObject *args, PyObject *kwds){
     std::cout << "CpuType init() called" << std::endl;
@@ -26,7 +38,6 @@ int CpuType_init(PyObject *self, PyObject *args, PyObject *kwds){
     }
 #endif
 
-
     CpuType* self_cpu = reinterpret_cast<CpuType*>(self);
     static const AmsNetId remoteNetId{ amsAddr };
 
@@ -34,6 +45,8 @@ int CpuType_init(PyObject *self, PyObject *args, PyObject *kwds){
 	auto adsClient = std::shared_ptr<BasicADS>(new TC1000AdsClient(remoteNetId));
 #else
     self_cpu->m_ads = (BasicADS*)PyObject_Malloc(sizeof(GenericAdsClient));
+
+
     try{
         new (self_cpu->m_ads) GenericAdsClient(remoteNetId, ipAddr);
     } catch (const AdsException &ex) {
@@ -49,7 +62,6 @@ int CpuType_init(PyObject *self, PyObject *args, PyObject *kwds){
         PyErr_SetString(PyExc_RuntimeError, ex.what());
         return -1;
     }
-    
 #endif
 
 	try {
@@ -83,18 +95,15 @@ void CpuType_dealloc(CpuType *self){
 
 PyObject* getTemp(PyObject *self, PyObject *args)
 {
-    
-
-    PyObject *test  = self;
-    //int ret = PyArg_ParseTuple(args, "O", &test);
     CpuType* self_cpu = reinterpret_cast<CpuType*>(self);
-    if(self_cpu->m_cpu){
-        if(self_cpu->m_cpu.has_value()){
-            std::cout << "Instanz gefunden" << std::endl;
-        } else {
-            std::cout << "Instanz nicht gefunden" << std::endl;
-        }
+
+    int16_t temp = 0;
+    int32_t ret = self_cpu->m_cpu->getTemp(temp);
+
+    if(ret){
+        PyErr_SetObject(PyExc_RuntimeError, adsErrorStr(ret));
+        return NULL;
     }
-    //CpuType* self_cpu = reinterpret_cast<CpuType*>(test);
-    return PyLong_FromUnsignedLong(123);
+
+    return PyLong_FromUnsignedLong(temp);
 }
