@@ -11,19 +11,22 @@
 #include <tupleobject.h>
 #include <structmember.h>
 #include "cpu.h"
+#include "methodobject.h"
 
 #if defined(USE_TWINCAT_ROUTER)
 	#include "TC1000_AdsClient.h"
 #else
 	#include "GenericAdsClient.h"
 #endif
-
+// https://cython.readthedocs.io/en/latest/src/userguide/extension_types.html
 typedef struct {
     PyObject_HEAD
     BasicADS* m_ads;
     std::optional<DeviceManager::CPU> m_cpu;
 } CpuType;
-
+// https://docs.python.org/release/2.6/_sources/extending/newtypes.txt
+// TODO" tp_new method hinzufuegen um einen initialwert zu setzen (z.b. NULL)
+// die tp_init funktion kann mehrfach aufgerufen werden
 
 int CpuType_init(PyObject *self, PyObject *args, PyObject *kwds);
 void CpuType_dealloc(CpuType *self);
@@ -37,7 +40,8 @@ static struct PyMemberDef CpuType_member[] = {
 };
 
 static PyMethodDef CpuType_methods[] = {
-    {"getTemp", (PyCFunction)getTemp, METH_VARARGS | METH_CLASS, "Returns the CPU temperature"},
+    {"getTemp", (PyCFunction)getTemp, METH_NOARGS, "Returns the CPU temperature"},
+    //{"getTemp", (PyCFunction)getTemp, METH_CLASS | METH_NOARGS, "Returns the CPU temperature"},
     {NULL, NULL} /* Sentinel */
 };
 
@@ -50,7 +54,7 @@ static PyType_Slot CpuType_slots[] = {
 };
 
 static PyType_Spec CpuType_spec = {
-    "CPU", // tp_name
+    "DeviceManager.CPU", // tp_name
     #if defined(USE_TWINCAT_ROUTER)
     sizeof(CpuType) + sizeof(TC1000AdsClient), // tp_basicsize
 #else

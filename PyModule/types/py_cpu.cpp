@@ -20,7 +20,7 @@ int CpuType_init(PyObject *self, PyObject *args, PyObject *kwds){
     }
 #else
     char *ipAddr  = NULL;
-
+    // TODO oder ss
     if (!PyArg_ParseTuple(args, "ss", &amsAddr, &ipAddr)) {
         return -1;
     }
@@ -83,7 +83,18 @@ void CpuType_dealloc(CpuType *self){
 
 PyObject* getTemp(PyObject *self, PyObject *args)
 {
-    CpuType* self_cpu = reinterpret_cast<CpuType*>(self);
+    
 
+    PyObject *test  = self;
+    //int ret = PyArg_ParseTuple(args, "O", &test);
+    CpuType* self_cpu = reinterpret_cast<CpuType*>(self);
+    if(self_cpu->m_cpu){
+        if(self_cpu->m_cpu.has_value()){
+            std::cout << "Instanz gefunden" << std::endl;
+        } else {
+            std::cout << "Instanz nicht gefunden" << std::endl;
+        }
+    }
+    //CpuType* self_cpu = reinterpret_cast<CpuType*>(test);
     return PyLong_FromUnsignedLong(123);
 }

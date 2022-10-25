@@ -38,7 +38,7 @@ int main(int argc, char *argv[], char *envp[])
         return -1;
     }
     PyObject* Cpu = get_attr(pmodule, "CPU");
-    init_cpu(Cpu);
-
+    PyObject* cpuInstance = cpu_init(Cpu);
+    test_cpu_getTemp(cpuInstance);
     return 0;
 }

@@ -1,8 +1,7 @@
 #ifndef GET_FUNC_H
 #define GET_FUNC_H
-
-#include "object.h"
 #include <Python.h>
+#include "object.h"
 #include <iostream>
 
 PyObject* get_attr(PyObject *pmodule, const char* fName){
