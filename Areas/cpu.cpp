@@ -30,7 +30,7 @@ CPU& CPU::operator=(const CPU& other) {
 	return *this;
 }
 
-int32_t DeviceManager::CPU::getFrequency(uint32_t& freq)
+int32_t CPU::getFrequency(uint32_t& freq)
 {
 	uint32_t n_bytesRead = 0;
 
@@ -41,7 +41,7 @@ int32_t DeviceManager::CPU::getFrequency(uint32_t& freq)
 	return m_adsClient.AdsReadReq(MDP_IDX_GRP, u32_cpu_freq_idx, sizeof(freq), &freq, &n_bytesRead);
 }
 
-int32_t DeviceManager::CPU::getUsage(uint16_t& usage)
+int32_t CPU::getUsage(uint16_t& usage)
 {
 	uint32_t n_bytesRead = 0;
 
@@ -52,7 +52,7 @@ int32_t DeviceManager::CPU::getUsage(uint16_t& usage)
 	return m_adsClient.AdsReadReq(MDP_IDX_GRP, u32_cpu_usage_idx, sizeof(usage), &usage, &n_bytesRead);
 }
 
-int32_t DeviceManager::CPU::getTemp(int16_t& temp)
+int32_t CPU::getTemp(int16_t& temp)
 {
 	uint32_t n_bytesRead = 0;
 
