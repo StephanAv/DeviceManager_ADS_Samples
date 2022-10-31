@@ -1,4 +1,5 @@
 #include <Python.h>
+#include "cpu.h"
 #include "object.h"
 #include "py_cpu.h"
 #include "ads_exception.h"
@@ -17,6 +18,9 @@ PyObject *CpuType_new(PyTypeObject *type, PyObject *args, PyObject *kwds){
         self = (CpuType *) type->tp_alloc(type, 0);
         if (self != NULL) {
             self->m_ads = NULL;
+            self->m_dtype = NULL;
+        } else {
+            return PyErr_NoMemory();
         }
        return (PyObject*) self;
 }
@@ -43,9 +47,17 @@ int CpuType_init(PyObject *self, PyObject *args, PyObject *kwds){
 
 #if defined(USE_TWINCAT_ROUTER)
 	auto adsClient = std::shared_ptr<BasicADS>(new TC1000AdsClient(remoteNetId));
-#else
-    self_cpu->m_ads = (BasicADS*)PyObject_Malloc(sizeof(GenericAdsClient));
 
+    // TODO
+#else
+
+    // Memory allocation for ADS instnace
+
+    self_cpu->m_ads = (BasicADS*)PyObject_Malloc(sizeof(GenericAdsClient));
+    if(!self_cpu->m_ads){
+        PyErr_SetNone(PyExc_MemoryError);
+        return -1;
+    }
 
     try{
         new (self_cpu->m_ads) GenericAdsClient(remoteNetId, ipAddr);
@@ -64,16 +76,24 @@ int CpuType_init(PyObject *self, PyObject *args, PyObject *kwds){
     }
 #endif
 
+    // Memory allocation for Device Manager type
+    self_cpu->m_dtype = (DeviceManager::CPU*)PyObject_Malloc(sizeof(DeviceManager::CPU));
+    if(!self_cpu->m_dtype){
+        PyErr_SetNone(PyExc_MemoryError);
+        return -1;
+    }
+
 	try {
-        self_cpu->m_cpu.emplace(*(self_cpu->m_ads));
+        new (self_cpu->m_dtype) DeviceManager::CPU(*self_cpu->m_ads);
+        //self_cpu->m_cpu.emplace(*(self_cpu->m_ads));
 	}
 	catch (const DeviceManager::AdsException& ex) {
         PyErr_SetString(PyExc_RuntimeError, ex.what());
 		return -1;
 	}
 
-	if (!self_cpu->m_cpu) {
-		std::cerr << "Module not available on target" << std::endl;
+	if (!self_cpu->m_dtype) {
+		//std::cerr << "Module not available on target" << std::endl;
         PyErr_SetString(PyExc_RuntimeError, "Module not available on target");
 		return -1;
 	}
@@ -86,7 +106,12 @@ void CpuType_dealloc(CpuType *self){
 
     CpuType* self_cpu = reinterpret_cast<CpuType*>(self);
 
-    self_cpu->m_cpu.reset();
+    //self_cpu->m_cpu.reset(); // TODO
+    if(self_cpu->m_dtype){
+        self_cpu->m_dtype->~CPU();
+        PyObject_Free(self_cpu->m_dtype);
+    }
+
     if(self_cpu->m_ads){
         self_cpu->m_ads->~BasicADS();
         PyObject_Free(self_cpu->m_ads);
@@ -98,7 +123,7 @@ PyObject* getTemp(PyObject *self, PyObject *args)
     CpuType* self_cpu = reinterpret_cast<CpuType*>(self);
 
     int16_t temp = 0;
-    int32_t ret = self_cpu->m_cpu->getTemp(temp);
+    int32_t ret = self_cpu->m_dtype->getTemp(temp);
 
     if(ret){
         PyErr_SetObject(PyExc_RuntimeError, adsErrorStr(ret));

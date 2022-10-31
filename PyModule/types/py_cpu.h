@@ -23,11 +23,8 @@
 typedef struct {
     PyObject_HEAD
     BasicADS* m_ads;
-    std::optional<DeviceManager::CPU> m_cpu;
+    DeviceManager::CPU* m_dtype;
 } CpuType;
-// https://docs.python.org/release/2.6/_sources/extending/newtypes.txt
-// TODO" tp_new method hinzufuegen um einen initialwert zu setzen (z.b. NULL)
-// die tp_init funktion kann mehrfach aufgerufen werden
 
 int CpuType_init(PyObject *self, PyObject *args, PyObject *kwds);
 void CpuType_dealloc(CpuType *self);
@@ -56,7 +53,7 @@ static PyType_Slot CpuType_slots[] = {
 };
 
 static PyType_Spec CpuType_spec = {
-    "DeviceManager.CPU", // tp_name
+    "CPU", // tp_name
     #if defined(USE_TWINCAT_ROUTER)
     sizeof(CpuType) + sizeof(TC1000AdsClient), // tp_basicsize
 #else
