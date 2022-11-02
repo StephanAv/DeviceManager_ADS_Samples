@@ -2,7 +2,7 @@
 #define PY_CPU_H
 
 #include <Python.h>
-
+#include "py_slot_templates.h"
 //#include <object.h>
 //#include <longobject.h>
 //#include <unicodeobject.h>
@@ -20,17 +20,16 @@
 #endif
 
 // https://cython.readthedocs.io/en/latest/src/userguide/extension_types.html
-typedef struct {
-    PyObject_HEAD
-    BasicADS* m_ads;
-    DeviceManager::CPU* m_dtype;
-} CpuType;
+// typedef struct {
+//     PyObject_HEAD
+//     BasicADS* m_ads;
+//     DeviceManager::CPU* m_dtype;
+// } CpuType;
 
-int CpuType_init(PyObject *self, PyObject *args, PyObject *kwds);
-void CpuType_dealloc(CpuType *self);
-PyObject *CpuType_new(PyTypeObject *subtype, PyObject *args, PyObject *kwds);
+
+//typedef DObject<DeviceManager::CPU> CpuType;
+
 PyObject* getTemp(PyObject *self, PyObject *args);
-
 
 static struct PyMemberDef CpuType_member[] = {
     //{"value", T_INT, offsetof(CpuType, value)},
@@ -44,9 +43,9 @@ static PyMethodDef CpuType_methods[] = {
 };
 
 static PyType_Slot CpuType_slots[] = {
-    {Py_tp_new, (void*)CpuType_new},
-    {Py_tp_init, (void*)CpuType_init},
-    {Py_tp_dealloc, (void*)CpuType_dealloc},
+    {Py_tp_new, (void*)dtype_new<DeviceManager::CPU>},
+    {Py_tp_init, (void*)dtype_init<DeviceManager::CPU>},
+    {Py_tp_dealloc, (void*)dtype_dealloc<DeviceManager::CPU>},
     {Py_tp_members, CpuType_member},
     {Py_tp_methods, CpuType_methods},
     {0, 0} /* Sentinel */
