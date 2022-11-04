@@ -5,6 +5,17 @@
 #include "get_attr.h"
 #include "test_cpu.h"
 
+static void reprint(PyObject* obj) {
+    PyObject* repr = PyObject_Repr(obj);
+    PyObject* str = PyUnicode_AsEncodedString(repr, "utf-8", "~E~");
+    const char* bytes = PyBytes_AS_STRING(str);
+
+    printf("REPR: %s\n", bytes);
+
+    Py_XDECREF(repr);
+    Py_XDECREF(str);
+}
+
 int main(int argc, char *argv[], char *envp[])
 {
 
@@ -18,7 +29,16 @@ int main(int argc, char *argv[], char *envp[])
 
     /* Initialize the Python interpreter.  Required.
        If this step fails, it will be a fatal error. */
+
     Py_Initialize();
+    PyObject* sys_path = PySys_GetObject("path");
+    PyList_Append(sys_path, PyUnicode_FromString("C:/Users/StephanA/source/repos/DeviceManager_ADS_Samples/out/build/x64-Debug/PyModule"));
+    PyObject* sys_path_str = PyObject_Repr(sys_path);
+    PyObject* pyStr = PyUnicode_AsEncodedString(sys_path_str, NULL, NULL);
+    const char* strPath = PyBytes_AsString(pyStr);
+    if (strPath) {
+        std::cout << "PATH: " << strPath << std::endl;
+    }
 
 //    const char* script_path = R"(/home/stephan/Documents/PythonCppExtension/main.py)";
 //    // https://docs.python.org/3/c-api/veryhigh.html#c.PyRun_SimpleFile

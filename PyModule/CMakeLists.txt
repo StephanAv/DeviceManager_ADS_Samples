@@ -25,14 +25,18 @@ if (WIN32)
 endif()
 
 # das wird benötigt
+#set(HEADER_FILES ${PYTHON_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/types )
+target_link_libraries(PyDeviceManager PRIVATE DeviceManager ${PYTHON_LIBRARIES})
+target_link_libraries(PyDebug PRIVATE DeviceManager ${PYTHON_LIBRARIES})
 set_target_properties(
     PyDeviceManager
     PROPERTIES
         PREFIX ""
         OUTPUT_NAME "DeviceManager"
         LINKER_LANGUAGE C # Egal ob hier C oder CXX steht
-        LINK_LIBRARIES DeviceManager
-        INCLUDE_DIRECTORIES "${PYTHON_INCLUDE_DIRS};${CMAKE_CURRENT_SOURCE_DIR}/types" # vscode/codium does not recognize this
+        #LINK_LIBRARIES "DeviceManager;${PYTHON_LIBRARIES}"
+        LINK_DIRECTORIES ${PROJECT_BINARY_DIR}
+        INCLUDE_DIRECTORIES "${PYTHON_INCLUDE_DIRS};${CMAKE_CURRENT_SOURCE_DIR}/types;${PROJECT_SOURCE_DIR}/ADS;${PROJECT_SOURCE_DIR}/Areas" # vscode/codium does not recognize this
 )
 set_target_properties(
     PyDebug
@@ -40,12 +44,27 @@ set_target_properties(
         OUTPUT_NAME "PyDebug"
         LINKER_LANGUAGE C # Egal ob hier C oder CXX steht
         INCLUDE_DIRECTORIES "/usr/include/python3.9;${PYTHON_INCLUDE_DIR};${CMAKE_CURRENT_SOURCE_DIR}/tests"
-        LINK_LIBRARIES "${PYTHON_LIBRARIES}"
+        #LINK_LIBRARIES "${PYTHON_LIBRARIES}"
 )
-#;${CMAKE_SOURCE_DIR}/ADS
+#;${CMAKE_SOURCE_DIR}/ADS  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/ADS;${CMAKE_CURRENT_SOURCE_DIR}/Areas>"
 #set(SRCS "devicemanager.cpp" "cpu.cpp")
 
 if (WIN32)
+    target_include_directories(PyDeviceManager PRIVATE "C:\\TwinCAT\\AdsApi\\TcAdsDll\\Include")
+    target_link_libraries(PyDeviceManager PUBLIC TcAdsDll.lib)
+    target_link_directories(PyDeviceManager PRIVATE "C:\\TwinCAT\\AdsApi\\TcAdsDll\\x64\\lib")
+
+    target_include_directories(PyDebug PRIVATE "C:\\TwinCAT\\AdsApi\\TcAdsDll\\Include")
+    target_link_libraries(PyDebug PUBLIC TcAdsDll.lib)
+    target_link_directories(PyDebug PRIVATE "C:\\TwinCAT\\AdsApi\\TcAdsDll\\x64\\lib")
+
+
+    add_custom_target(RunPyDebug 
+        COMMAND cmd /c ${CMAKE_CURRENT_SOURCE_DIR}/init.bat
+        # https://dev.to/iblancasa/learning-cmake-3-understanding-addcustomcommand-and-addcustomtarget-43gp
+    )
+
+    
     set_target_properties(
         PyDeviceManager
         PROPERTIES

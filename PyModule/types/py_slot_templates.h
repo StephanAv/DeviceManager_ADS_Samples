@@ -3,6 +3,7 @@
 
 #include <Python.h>
 #include <iostream>
+#include <cstdint>
 
 #if defined(USE_TWINCAT_ROUTER)
 	#include "TC1000_AdsClient.h"
@@ -15,7 +16,11 @@
 template <typename T>
 struct DObject{
     PyObject_HEAD
+#if defined(USE_TWINCAT_ROUTER)
+    TC1000AdsClient* m_ads;
+#else
     BasicADS* m_ads;
+#endif
     T *m_dtype;
 };
 
@@ -53,12 +58,44 @@ int dtype_init(PyObject *self, PyObject *args, PyObject *kwds){
 #endif
 
     DObject<T> *self_dtype = reinterpret_cast<DObject<T>*>(self);
-    static const AmsNetId remoteNetId{ amsAddr };
+    uint8_t b_netId[6] = { 0 };
+    //std::string s_amsAddr(amsAddr);
+
+    int ams_b_cnt = 0;
+    for (uint8_t* it = (uint8_t*)amsAddr; *it; ++it) {
+        if (isdigit(*it)) {
+            b_netId[ams_b_cnt++] = *it;
+        }
+    }
+
+    
+
+    static const AmsNetId remoteNetId{ (unsigned char)b_netId };
 
 #if defined(USE_TWINCAT_ROUTER)
-	auto adsClient = std::shared_ptr<BasicADS>(new TC1000AdsClient(remoteNetId));
-
-    // TODO
+    
+    self_dtype->m_ads = (TC1000AdsClient*)PyObject_Malloc(sizeof(TC1000AdsClient));
+    if (!self_dtype->m_ads) {
+        PyErr_SetNone(PyExc_MemoryError);
+        return -1;
+    }
+    //try {
+    //    new (self_dtype->m_ads) TC1000AdsClient(remoteNetId);
+    //}
+    //catch (const AdsException& ex) {
+    //    std::cout << "ADS Exception" << std::endl;
+    //    PyObject_Free(self_dtype->m_ads);
+    //    self_dtype->m_ads = NULL;
+    //    PyErr_SetString(PyExc_RuntimeError, ex.what());
+    //    return -1;
+    //}
+    //catch (const std::runtime_error& ex) {
+    //    std::cout << "Runtime error" << std::endl;
+    //    PyObject_Free(self_dtype->m_ads);
+    //    self_dtype->m_ads = NULL;
+    //    PyErr_SetString(PyExc_RuntimeError, ex.what());
+    //    return -1;
+    //}
 #else
 
     // Memory allocation for ADS instnace
@@ -121,7 +158,11 @@ void dtype_dealloc(PyObject *self){
     }
 
     if(self_dtype->m_ads){
-        self_dtype->m_ads->~BasicADS(); // TODO
+#if defined(USE_TWINCAT_ROUTER)
+        self_dtype->m_ads->~TC1000AdsClient();
+#else
+        self_dtype->m_ads->~BasicADS();
+#endif
         PyObject_Free(self_dtype->m_ads);
     }
 }

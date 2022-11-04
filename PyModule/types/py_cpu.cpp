@@ -6,10 +6,7 @@
 #include "pyerrors.h"
 
 #include <cstdint>
-#include <iostream>
-#include <python3.9/unicodeobject.h> // ?
-#include <cassert>
-#include <stdexcept>
+
 #include "ads_py_error.h"
 
 PyObject* getTemp(PyObject *self, PyObject *args)

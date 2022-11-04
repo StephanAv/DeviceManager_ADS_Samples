@@ -7,14 +7,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
-add_library(DeviceManager)
-#if (UNIX)
-#    add_library(DeviceManager SHARED)
-#elseif(WIN32)
-#    add_library(DeviceManager STATIC)
-#endif()
 
-
+# On Windows, DeviceManager must be build as static library
+if(WIN32)
+    add_library(DeviceManager STATIC)
+else()
+    add_library(DeviceManager)
+endif()
 
 add_subdirectory(Areas)
 

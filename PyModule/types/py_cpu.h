@@ -27,7 +27,7 @@
 // } CpuType;
 
 
-//typedef DObject<DeviceManager::CPU> CpuType;
+typedef DObject<DeviceManager::CPU> CpuType;
 
 PyObject* getTemp(PyObject *self, PyObject *args);
 

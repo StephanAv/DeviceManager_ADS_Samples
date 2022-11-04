@@ -10,7 +10,10 @@ print('\n'.join(sys.path))
 amsNetId = "5.80.201.232.1.1"
 ipAddr   = "192.168.1.98"
 #ipAddr   = "192.168.1"
-# cpu = CPU(amsNetId, ipAddr)
+if os.name == 'nt':
+    cpu = CPU(amsNetId)
+else:
+    cpu = CPU(amsNetId, ipAddr)
 
 # for attr in getmembers(cpu):
 #     print(attr)

@@ -22,7 +22,7 @@ int main() {
 #endif
 	
 	std::optional<DeviceManager::CPU> cpu;
-
+	size_t size_opt_cpu_a = sizeof(cpu);
 	try {
 		cpu.emplace(*adsClient);
 	}
@@ -35,6 +35,16 @@ int main() {
 		std::cerr << "Module not available on target" << std::endl;
 		return -1;
 	}
+
+	size_t size_opt_cpu_b = sizeof(cpu);
+
+	size_t size_cpu = sizeof(DeviceManager::CPU);
+	
+	long x1 = 55;
+	size_t sx1 = sizeof(x1);
+	std::optional<long> x2;
+	x2.emplace(123);
+	size_t soptx1 = sizeof(x2);
 
 	int32_t error = 0;
 
