@@ -31,8 +31,15 @@ int main(int argc, char *argv[], char *envp[])
        If this step fails, it will be a fatal error. */
 
     Py_Initialize();
+
+    // https://docs.python.org/3/whatsnew/3.8.html#ctypes
+    // https://stackoverflow.com/questions/41365446/how-to-resolve-importerror-dll-load-failed-on-python
+    PyRun_SimpleString("import os");
+    PyRun_SimpleString("import sys");
+    PyRun_SimpleString("os.add_dll_directory('C:/Users/StephanA/source/repos/DeviceManager_ADS_Samples/out/build/x64-Debug/PyModule')");
+
     PyObject* sys_path = PySys_GetObject("path");
-    PyList_Append(sys_path, PyUnicode_FromString("C:/Users/StephanA/source/repos/DeviceManager_ADS_Samples/out/build/x64-Debug/PyModule"));
+    PyList_Append(sys_path, PyUnicode_FromString("C:/Users/StephanA/source/repos/DeviceManager_ADS_Samples/out/build/x64-Release/PyModule"));
     PyObject* sys_path_str = PyObject_Repr(sys_path);
     PyObject* pyStr = PyUnicode_AsEncodedString(sys_path_str, NULL, NULL);
     const char* strPath = PyBytes_AsString(pyStr);
@@ -40,6 +47,8 @@ int main(int argc, char *argv[], char *envp[])
         std::cout << "PATH: " << strPath << std::endl;
     }
 
+
+    PyRun_SimpleString("import DeviceManager");
 //    const char* script_path = R"(/home/stephan/Documents/PythonCppExtension/main.py)";
 //    // https://docs.python.org/3/c-api/veryhigh.html#c.PyRun_SimpleFile
 //    FILE* script = fopen(script_path, "r");
