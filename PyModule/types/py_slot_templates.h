@@ -59,7 +59,17 @@ int dtype_init(PyObject *self, PyObject *args, PyObject *kwds){
 
     DObject<T> *self_dtype = reinterpret_cast<DObject<T>*>(self);
     uint8_t b_netId[6] = { 0 };
-    //std::string s_amsAddr(amsAddr);
+    std::string s_amsAddr(amsAddr);
+    std::string delimiter = ".";
+
+    size_t pos = 0;
+    std::string token;
+    while ((pos = s_amsAddr.find(delimiter)) != std::string::npos) {
+        token = s_amsAddr.substr(0, pos);
+        std::cout << token << std::endl;
+        s_amsAddr.erase(0, pos + delimiter.length());
+    }
+    std::cout << s_amsAddr << std::endl;
 
     int ams_b_cnt = 0;
     for (uint8_t* it = (uint8_t*)amsAddr; *it; ++it) {
