@@ -4,10 +4,9 @@
 #include "py_cpu.h"
 #include "ads_exception.h"
 #include "pyerrors.h"
+#include "ads_py_error.h"
 
 #include <cstdint>
-
-#include "ads_py_error.h"
 
 PyObject* getTemp(PyObject *self, PyObject *args)
 {

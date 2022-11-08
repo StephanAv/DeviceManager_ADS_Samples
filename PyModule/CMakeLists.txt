@@ -11,7 +11,10 @@ find_package(PythonLibs REQUIRED)
 
 #add_executable(PyDebug "pydbg.cpp")
 
-set(SRCS devicemanager.cpp types/py_cpu.cpp)
+set(SRCS    devicemanager.cpp
+            types/py_cpu.cpp
+            types/py_twincat.cpp)
+
 add_library(PyDeviceManager SHARED ${SRCS})
 add_executable(PyDebug "debug.cpp")
 #add_library(PyDeviceManager SHARED )

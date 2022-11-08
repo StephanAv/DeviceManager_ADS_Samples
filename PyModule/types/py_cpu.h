@@ -3,29 +3,10 @@
 
 #include <Python.h>
 #include "py_slot_templates.h"
-//#include <object.h>
-//#include <longobject.h>
-//#include <unicodeobject.h>
-//#include <modsupport.h>
-//#include <methodobject.h>
 #include <tupleobject.h>
 #include <structmember.h>
 #include "cpu.h"
 #include "methodobject.h"
-
-#if defined(USE_TWINCAT_ROUTER)
-	#include "TC1000_AdsClient.h"
-#else
-	#include "GenericAdsClient.h"
-#endif
-
-// https://cython.readthedocs.io/en/latest/src/userguide/extension_types.html
-// typedef struct {
-//     PyObject_HEAD
-//     BasicADS* m_ads;
-//     DeviceManager::CPU* m_dtype;
-// } CpuType;
-
 
 typedef DObject<DeviceManager::CPU> CpuType;
 

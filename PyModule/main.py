@@ -1,10 +1,6 @@
 import os, sys
 from inspect import getmembers
 
-
-# C:\Users\StephanA\source\repos\DeviceManager_ADS_Samples\out\build\x64-Release\PyModule
-
-# https://learn.microsoft.com/en-us/visualstudio/python/debugging-mixed-mode-c-cpp-python-in-visual-studio?view=vs-2019
 if os.name == 'nt':
     os.add_dll_directory('C:/TwinCAT/Common64')
     sys.path.append('C:/Users/StephanA/source/repos/DeviceManager_ADS_Samples/out/build/x64-Release/PyModule')
@@ -17,23 +13,26 @@ import DeviceManager
 from DeviceManager import *
 print('Loaded DeviceManager binary: {}'.format(DeviceManager.__file__))
 
-
 #for attr in getmembers(DeviceManager):
 #    print(attr)
+
 amsNetId = "5.80.201.232.1.1.7.8"
 ipAddr   = "192.168.1.98"
-#ipAddr   = "192.168.1"
 
 if os.name == 'nt':
-    cpu = CPU(amsNetId)
+    #cpu = CPU(amsNetId)
+    tc  = TwinCAT(amsNetId)
 else:
-    cpu = CPU(amsNetId, ipAddr)
+    #cpu = CPU(amsNetId, ipAddr)
+    tc  = TwinCAT(amsNetId, ipAddr)
 
 # for attr in getmembers(cpu):
 #     print(attr)
 
-print('CPU frequency: ' + str(cpu.getFreq()) + ' MHz')
-print('CPU usage: ' + str(cpu.getUsage()) + ' %')
-print('CPU temperature: ' + str(cpu.getTemp()) + '°C')
+#print('CPU frequency: ' + str(cpu.getFreq()) + ' MHz')
+#print('CPU usage: ' + str(cpu.getUsage()) + ' %')
+#print('CPU temperature: ' + str(cpu.getTemp()) + '°C')
 
-print('ENDE')
+print('TwinCAT version on target: ' + str(tc.getTcMajor()) + '.' + str(tc.getTcMinor()) + '.' + str(tc.getTcBuild()))
+#tc.deleteAdsRoute('CX-50C9E8')
+print('END')

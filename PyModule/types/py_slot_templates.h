@@ -26,7 +26,7 @@ struct DObject{
 
 template <typename T>
 PyObject *dtype_new(PyTypeObject *type){
-    std::cout << typeid(T).name() <<"_new() called" << std::endl;
+    // std::cout << typeid(T).name() <<"_new() called" << std::endl;
     DObject<T> *self;
 
         self = (DObject<T>*) type->tp_alloc(type, 0);
@@ -41,7 +41,7 @@ PyObject *dtype_new(PyTypeObject *type){
 
 template <typename T>
 int dtype_init(PyObject *self, PyObject *args, PyObject *kwds){
-    std::cout << typeid(T).name() <<"_init() called" << std::endl;
+    // std::cout << typeid(T).name() <<"_init() called" << std::endl;
     assert(args);
 
     // Process Python arguments
@@ -102,8 +102,6 @@ int dtype_init(PyObject *self, PyObject *args, PyObject *kwds){
 
 #else
 
-    
-
     self_dtype->m_ads = (BasicADS*)PyObject_Malloc(sizeof(GenericAdsClient));
     if(!self_dtype->m_ads){
         PyErr_SetNone(PyExc_MemoryError);
@@ -152,8 +150,7 @@ int dtype_init(PyObject *self, PyObject *args, PyObject *kwds){
 
 template<typename T>
 void dtype_dealloc(PyObject *self){
-    std::cout << typeid(T).name() <<"_dealloc() called" << std::endl;
-
+    //std::cout << typeid(T).name() <<"_dealloc() called" << std::endl;
     DObject<T> *self_dtype = reinterpret_cast<DObject<T>*>(self);
 
     if(self_dtype->m_dtype){

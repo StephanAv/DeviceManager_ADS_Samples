@@ -39,6 +39,8 @@
     <Content Include="types\py_cpu.cpp" />
     <Content Include="types\py_cpu.h" />
     <Content Include="types\py_slot_templates.h" />
+    <Content Include="types\py_twincat.cpp" />
+    <Content Include="types\py_twincat.h" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

@@ -1,5 +1,6 @@
 #include <Python.h>
 #include "py_cpu.h"
+#include "py_twincat.h"
 #include "modsupport.h"
 #include "object.h"
 
@@ -28,6 +29,22 @@ PyInit_DeviceManager(void) {
     }
 
     if(PyModule_AddObject(module, "CPU", cpu_type) < 0){
+        Py_DECREF(cpu_type);
+        Py_DECREF(module);
+        return NULL;
+    }
+
+    // Create and add TwinCAT type
+    PyObject* tc_type = PyType_FromSpec(&TcType_spec);
+    if (tc_type == NULL) {
+        Py_DecRef(module);
+        Py_DecRef(cpu_type);
+        Py_DecRef(tc_type);
+        return NULL;
+    }
+
+    if (PyModule_AddObject(module, "TwinCAT", tc_type) < 0) {
+        Py_DECREF(tc_type);
         Py_DECREF(cpu_type);
         Py_DECREF(module);
         return NULL;
