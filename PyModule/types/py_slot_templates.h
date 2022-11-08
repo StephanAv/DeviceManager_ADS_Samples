@@ -2,8 +2,12 @@
 #define PY_SLOT_TEMPLATES_H
 
 #include <Python.h>
+#include <cstddef>
 #include <iostream>
 #include <cstdint>
+#include <sstream>
+#include <stdexcept>
+#include <string>
 
 #if defined(USE_TWINCAT_ROUTER)
 	#include "TC1000_AdsClient.h"
@@ -44,6 +48,7 @@ int dtype_init(PyObject *self, PyObject *args, PyObject *kwds){
     std::cout << typeid(T).name() <<"_init() called" << std::endl;
     assert(args);
 
+    // Process Python arguments
     char *amsAddr = NULL;
 #if defined(USE_TWINCAT_ROUTER)
     if (!PyArg_ParseTuple(args, "s", &amsAddr)) {
@@ -57,31 +62,29 @@ int dtype_init(PyObject *self, PyObject *args, PyObject *kwds){
     }
 #endif
 
-    DObject<T> *self_dtype = reinterpret_cast<DObject<T>*>(self);
-    uint8_t b_netId[6] = { 0 };
-    std::string s_amsAddr(amsAddr);
-    std::string delimiter = ".";
+    // Parse AmsNetId
 
-    size_t pos = 0;
+    uint8_t b_netId[6]  = { 0, 0, 0, 0, 1, 1 };
+    size_t i = 0;
+    std::istringstream s_amsAddr(amsAddr);
     std::string token;
-    while ((pos = s_amsAddr.find(delimiter)) != std::string::npos) {
-        token = s_amsAddr.substr(0, pos);
-        std::cout << token << std::endl;
-        s_amsAddr.erase(0, pos + delimiter.length());
-    }
-    std::cout << s_amsAddr << std::endl;
 
-    int ams_b_cnt = 0;
-    for (uint8_t* it = (uint8_t*)amsAddr; *it; ++it) {
-        if (isdigit(*it)) {
-            b_netId[ams_b_cnt++] = *it;
+    while((i < sizeof(b_netId)) && std::getline(s_amsAddr, token, '.')){
+        try {
+            b_netId[i++] = std::stoi(token);
+        } catch (std::logic_error const& ex) {
+            std::string err("Error parsing AmsNetId: ");
+            err += ex.what(); 
+            PyErr_SetString(PyExc_RuntimeError, err.c_str());
+            return -1;
         }
     }
 
-    
+    static const AmsNetId remoteNetId{ b_netId[0], b_netId[1], b_netId[2], b_netId[3], b_netId[4], b_netId[5] };
 
-    static const AmsNetId remoteNetId{ (unsigned char)b_netId };
 
+
+    DObject<T> *self_dtype = reinterpret_cast<DObject<T>*>(self);
 #if defined(USE_TWINCAT_ROUTER)
     
     self_dtype->m_ads = (TC1000AdsClient*)PyObject_Malloc(sizeof(TC1000AdsClient));
