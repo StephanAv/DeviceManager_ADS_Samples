@@ -31,6 +31,15 @@
   <ItemGroup>
     <InterpreterReference Include="Global|PythonCore|3.9" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="types\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="types\ads_py_error.h" />
+    <Content Include="types\py_cpu.cpp" />
+    <Content Include="types\py_cpu.h" />
+    <Content Include="types\py_slot_templates.h" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
        Visual Studio and specify your pre- and post-build commands in

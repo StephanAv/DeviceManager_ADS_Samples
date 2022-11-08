@@ -6,7 +6,7 @@ from inspect import getmembers
 
 # https://learn.microsoft.com/en-us/visualstudio/python/debugging-mixed-mode-c-cpp-python-in-visual-studio?view=vs-2019
 if os.name == 'nt':
-    os.add_dll_directory('C:\\Users\\StephanA\\source\\repos\\DeviceManager_ADS_Samples\\out\\build\\x64-Debug\\PyModule')
+    os.add_dll_directory('C:/TwinCAT/Common64')
     sys.path.append('C:/Users/StephanA/source/repos/DeviceManager_ADS_Samples/out/build/x64-Release/PyModule')
 
 print("sys.path:")
@@ -29,8 +29,11 @@ if os.name == 'nt':
 else:
     cpu = CPU(amsNetId, ipAddr)
 
-print('CPU temperature: ' + str(cpu.getTemp()) + '°C')
-print('ENDE')
 # for attr in getmembers(cpu):
 #     print(attr)
 
+print('CPU frequency: ' + str(cpu.getFreq()) + ' MHz')
+print('CPU usage: ' + str(cpu.getUsage()) + ' %')
+print('CPU temperature: ' + str(cpu.getTemp()) + '°C')
+
+print('ENDE')

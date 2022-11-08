@@ -29,16 +29,15 @@
 
 typedef DObject<DeviceManager::CPU> CpuType;
 
+PyObject* getFreq(PyObject* self, PyObject* args);
+PyObject* getUsage(PyObject* self, PyObject* args);
 PyObject* getTemp(PyObject *self, PyObject *args);
 
-static struct PyMemberDef CpuType_member[] = {
-    //{"value", T_INT, offsetof(CpuType, value)},
-    {NULL} /* Sentinel */
-};
 
 static PyMethodDef CpuType_methods[] = {
-    {"getTemp", (PyCFunction)getTemp, METH_NOARGS, "Returns the CPU temperature"},
-    //{"getTemp", (PyCFunction)getTemp, METH_CLASS | METH_NOARGS, "Returns the CPU temperature"},
+    {"getFreq", (PyCFunction)getFreq, METH_NOARGS, "Returns the CPU frequency [MHz]"},
+    {"getUsage", (PyCFunction)getUsage, METH_NOARGS, "Returns the current CPU usage [%]"},
+    {"getTemp", (PyCFunction)getTemp, METH_NOARGS, "Returns the CPU temperature [°C]"},
     {NULL, NULL} /* Sentinel */
 };
 
@@ -46,7 +45,6 @@ static PyType_Slot CpuType_slots[] = {
     {Py_tp_new, (void*)dtype_new<DeviceManager::CPU>},
     {Py_tp_init, (void*)dtype_init<DeviceManager::CPU>},
     {Py_tp_dealloc, (void*)dtype_dealloc<DeviceManager::CPU>},
-    {Py_tp_members, CpuType_member},
     {Py_tp_methods, CpuType_methods},
     {0, 0} /* Sentinel */
 };

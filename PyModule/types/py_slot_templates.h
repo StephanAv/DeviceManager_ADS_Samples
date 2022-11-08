@@ -20,11 +20,7 @@
 template <typename T>
 struct DObject{
     PyObject_HEAD
-#if defined(USE_TWINCAT_ROUTER)
-    TC1000AdsClient* m_ads;
-#else
     BasicADS* m_ads;
-#endif
     T *m_dtype;
 };
 
@@ -82,36 +78,31 @@ int dtype_init(PyObject *self, PyObject *args, PyObject *kwds){
 
     static const AmsNetId remoteNetId{ b_netId[0], b_netId[1], b_netId[2], b_netId[3], b_netId[4], b_netId[5] };
 
-
-
     DObject<T> *self_dtype = reinterpret_cast<DObject<T>*>(self);
+
+    // Allocation and instatiation of the ADS client
 #if defined(USE_TWINCAT_ROUTER)
     
-    self_dtype->m_ads = (TC1000AdsClient*)PyObject_Malloc(sizeof(TC1000AdsClient));
+    self_dtype->m_ads = (BasicADS*)PyObject_Malloc(sizeof(TC1000AdsClient));
     if (!self_dtype->m_ads) {
         PyErr_SetNone(PyExc_MemoryError);
         return -1;
     }
-    //try {
-    //    new (self_dtype->m_ads) TC1000AdsClient(remoteNetId);
-    //}
-    //catch (const AdsException& ex) {
-    //    std::cout << "ADS Exception" << std::endl;
-    //    PyObject_Free(self_dtype->m_ads);
-    //    self_dtype->m_ads = NULL;
-    //    PyErr_SetString(PyExc_RuntimeError, ex.what());
-    //    return -1;
-    //}
-    //catch (const std::runtime_error& ex) {
-    //    std::cout << "Runtime error" << std::endl;
-    //    PyObject_Free(self_dtype->m_ads);
-    //    self_dtype->m_ads = NULL;
-    //    PyErr_SetString(PyExc_RuntimeError, ex.what());
-    //    return -1;
-    //}
+
+    try {
+        new (self_dtype->m_ads) TC1000AdsClient(remoteNetId);
+    }
+    catch (const std::exception& ex) {
+        std::cout << "ADS Exception" << std::endl;
+        PyObject_Free(self_dtype->m_ads);
+        self_dtype->m_ads = NULL;
+        PyErr_SetString(PyExc_RuntimeError, ex.what());
+        return -1;
+    }
+
 #else
 
-    // Memory allocation for ADS instnace
+    
 
     self_dtype->m_ads = (BasicADS*)PyObject_Malloc(sizeof(GenericAdsClient));
     if(!self_dtype->m_ads){
@@ -171,11 +162,7 @@ void dtype_dealloc(PyObject *self){
     }
 
     if(self_dtype->m_ads){
-#if defined(USE_TWINCAT_ROUTER)
-        self_dtype->m_ads->~TC1000AdsClient();
-#else
         self_dtype->m_ads->~BasicADS();
-#endif
         PyObject_Free(self_dtype->m_ads);
     }
 }

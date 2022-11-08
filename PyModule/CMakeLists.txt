@@ -33,7 +33,7 @@ set_target_properties(
     PROPERTIES
         PREFIX ""
         OUTPUT_NAME "DeviceManager"
-        LINKER_LANGUAGE C # Egal ob hier C oder CXX steht
+        #LINKER_LANGUAGE C # Egal ob hier C oder CXX steht
         #LINK_LIBRARIES "DeviceManager;${PYTHON_LIBRARIES}"
         LINK_DIRECTORIES ${PROJECT_BINARY_DIR}
         INCLUDE_DIRECTORIES "${PYTHON_INCLUDE_DIRS};${CMAKE_CURRENT_SOURCE_DIR}/types;${PROJECT_SOURCE_DIR}/ADS;${PROJECT_SOURCE_DIR}/Areas" # vscode/codium does not recognize this
@@ -58,7 +58,7 @@ if (WIN32)
     target_link_libraries(PyDebug PUBLIC TcAdsDll.lib)
     target_link_directories(PyDebug PRIVATE "C:\\TwinCAT\\AdsApi\\TcAdsDll\\x64\\lib")
 
-
+    #add_compile_options(/Od)
     add_custom_target(RunPyDebug 
         COMMAND cmd /c ${CMAKE_CURRENT_SOURCE_DIR}/init.bat
         # https://dev.to/iblancasa/learning-cmake-3-understanding-addcustomcommand-and-addcustomtarget-43gp
