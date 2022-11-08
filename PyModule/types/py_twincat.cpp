@@ -1,12 +1,7 @@
 #include <Python.h>
 #include "twincat.h"
-#include "object.h"
 #include "py_twincat.h"
-#include "ads_exception.h"
-#include "pyerrors.h"
 #include "ads_py_error.h"
-
-#include <cstdint>
 
 PyObject* getTcMajor(PyObject* self, PyObject* Py_UNUSED(args))
 {

@@ -1,8 +1,6 @@
 #include <Python.h>
 #include "py_cpu.h"
 #include "py_twincat.h"
-#include "modsupport.h"
-#include "object.h"
 
 PyModuleDef devman_module = {
     PyModuleDef_HEAD_INIT,

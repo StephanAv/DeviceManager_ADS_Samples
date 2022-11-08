@@ -3,10 +3,7 @@
 
 #include <Python.h>
 #include "py_slot_templates.h"
-#include <tupleobject.h>
-#include <structmember.h>
 #include "twincat.h"
-#include "methodobject.h"
 
 typedef DObject<DeviceManager::TwinCAT> TcType;
 

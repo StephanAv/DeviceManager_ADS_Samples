@@ -3,10 +3,7 @@
 
 #include <Python.h>
 #include "py_slot_templates.h"
-#include <tupleobject.h>
-#include <structmember.h>
 #include "cpu.h"
-#include "methodobject.h"
 
 typedef DObject<DeviceManager::CPU> CpuType;
 
@@ -18,7 +15,7 @@ PyObject* getTemp(PyObject *self, PyObject *args);
 static PyMethodDef CpuType_methods[] = {
     {"getFreq", (PyCFunction)getFreq, METH_NOARGS, "Returns the CPU frequency [MHz]"},
     {"getUsage", (PyCFunction)getUsage, METH_NOARGS, "Returns the current CPU usage [%]"},
-    {"getTemp", (PyCFunction)getTemp, METH_NOARGS, "Returns the CPU temperature [°C]"},
+    {"getTemp", (PyCFunction)getTemp, METH_NOARGS, "Returns the CPU temperature [ï¿½C]"},
     {NULL, NULL} /* Sentinel */
 };
 
