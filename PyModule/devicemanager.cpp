@@ -1,6 +1,7 @@
 #include <Python.h>
 #include "py_cpu.h"
 #include "py_twincat.h"
+#include "py_fso.h"
 
 PyModuleDef devman_module = {
     PyModuleDef_HEAD_INIT,
@@ -14,38 +15,58 @@ PyModuleDef devman_module = {
     NULL  // Optional module deallocation function
 };
 
+void decref(std::vector<PyObject*>& vDecr) {
+    for (auto& pPyObj : vDecr){
+        Py_DecRef(pPyObj);
+    }
+}
+
 PyMODINIT_FUNC 
 PyInit_DeviceManager(void) {
 
+    std::vector<PyObject*> vDecr;
     PyObject* module = PyModule_Create(&devman_module);
+    vDecr.push_back(module);
 
     // Create and add CPU type
+
     PyObject *cpu_type = PyType_FromSpec(&CpuType_spec);
     if (cpu_type == NULL){
-        Py_DecRef(module);
+        decref(vDecr);
         return NULL;
     }
+    vDecr.push_back(cpu_type);
 
     if(PyModule_AddObject(module, "CPU", cpu_type) < 0){
-        Py_DECREF(cpu_type);
-        Py_DECREF(module);
+        decref(vDecr);
         return NULL;
     }
 
     // Create and add TwinCAT type
     PyObject* tc_type = PyType_FromSpec(&TcType_spec);
     if (tc_type == NULL) {
-        Py_DecRef(module);
-        Py_DecRef(cpu_type);
-        Py_DecRef(tc_type);
+        decref(vDecr);
+        return NULL;
+    }
+    vDecr.push_back(tc_type);
+
+    if (PyModule_AddObject(module, "TwinCAT", tc_type) < 0) {
+        decref(vDecr);
         return NULL;
     }
 
-    if (PyModule_AddObject(module, "TwinCAT", tc_type) < 0) {
-        Py_DECREF(tc_type);
-        Py_DECREF(cpu_type);
-        Py_DECREF(module);
+    // Create and add File System Object Type
+    PyObject* fso_type = PyType_FromSpec(&FsoType_spec);
+    if (fso_type == NULL) {
+        decref(vDecr);
         return NULL;
     }
+    vDecr.push_back(fso_type);
+
+    if (PyModule_AddObject(module, "FileSystem", fso_type) < 0) {
+        decref(vDecr);
+        return NULL;
+    }
+
     return module;
 }

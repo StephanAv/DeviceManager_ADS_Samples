@@ -38,6 +38,7 @@
     <Content Include="types\ads_py_error.h" />
     <Content Include="types\py_cpu.cpp" />
     <Content Include="types\py_cpu.h" />
+    <Content Include="types\py_fso.cpp" />
     <Content Include="types\py_slot_templates.h" />
     <Content Include="types\py_twincat.cpp" />
     <Content Include="types\py_twincat.h" />

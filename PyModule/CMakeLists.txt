@@ -13,7 +13,9 @@ find_package(PythonLibs REQUIRED)
 
 set(SRCS    devicemanager.cpp
             types/py_cpu.cpp
-            types/py_twincat.cpp)
+            types/py_twincat.cpp
+            types/py_fso.cpp           
+)
 
 add_library(PyDeviceManager SHARED ${SRCS})
 add_executable(PyDebug "debug.cpp")
@@ -29,6 +31,10 @@ endif()
 
 # das wird benötigt
 #set(HEADER_FILES ${PYTHON_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/types )
+
+# TODO 
+# https://cmake.org/cmake/help/v3.14/prop_tgt/EXCLUDE_FROM_ALL.html
+
 target_link_libraries(PyDeviceManager PRIVATE DeviceManager ${PYTHON_LIBRARIES})
 target_link_libraries(PyDebug PRIVATE DeviceManager ${PYTHON_LIBRARIES})
 set_target_properties(
