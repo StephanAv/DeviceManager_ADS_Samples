@@ -8,9 +8,13 @@
 typedef DObject<DeviceManager::FileSystemObject> FsoType;
 
 PyObject* dir(PyObject* self, PyObject* args);
-
+PyObject* deleteFile(PyObject* self, PyObject* args);
+PyObject* mkdir(PyObject* self, PyObject* args);
+//mkdir(const char path[], bool bRecursive)
 static PyMethodDef FsoType_methods[] = {
     {"dir", (PyCFunction)dir, METH_VARARGS, "List files and directories"},
+    {"deleteFile", (PyCFunction)deleteFile, METH_VARARGS, "Delete file on target system."},
+    {"mkdir", (PyCFunction)mkdir, METH_VARARGS, "Create a directory on the target system."},
     //{"getUsage", (PyCFunction)getUsage, METH_NOARGS, "Returns the current CPU usage [%]"},
     //{"getTemp", (PyCFunction)getTemp, METH_NOARGS, "Returns the CPU temperature [?C]"},
     {NULL, NULL} /* Sentinel */

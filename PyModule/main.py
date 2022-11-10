@@ -16,7 +16,8 @@ print('Loaded DeviceManager binary: {}'.format(DeviceManager.__file__))
 #for attr in getmembers(DeviceManager):
 #    print(attr)
 
-amsNetId = "5.80.201.232.1.1.7.8"
+amsNetId = "5.69.55.236.1.1"  # Windows 10
+#amsNetId = "5.80.201.232.1.1" # TwinCAT/BSD
 ipAddr   = "192.168.1.98"
 
 if os.name == 'nt': 
@@ -38,13 +39,15 @@ else:
 #print('TwinCAT version on target: ' + str(tc.getTcMajor()) + '.' + str(tc.getTcMinor()) + '.' + str(tc.getTcBuild()))
 #tc.deleteAdsRoute('CX-50C9E8')
 
-folders, files = fs.dir(r'/usr/local/etc/TwinCAT/3.1/Boot/*')
+#folders, files = fs.dir(r'/usr/local/etc/TwinCAT/3.1/Boot/*')
 
-print('>>> Folders: ')
-for _folder in folders:
-    print(_folder + '/')
-print('>>> Files')
-for _file in files:
-    print(_file)
+#print('>>> Folders: ')
+#for _folder in folders:
+#    print(_folder + '/')
+#print('>>> Files')
+#for _file in files:
+#    print(_file)
 
+# fs.deleteFile(r'/usr/local/etc/TwinCAT/3.1/Boot/test.txt', False)
+#fs.mkdir(r'C:\TwinCAT\3.1\Boot\NewFolder')
 print('END')

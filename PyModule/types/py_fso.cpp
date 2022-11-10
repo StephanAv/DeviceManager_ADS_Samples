@@ -5,7 +5,7 @@
 
 PyObject* dir(PyObject* self, PyObject* args)
 {
-    FsoType* self_tc = reinterpret_cast<FsoType*>(self);
+    FsoType* self_fso = reinterpret_cast<FsoType*>(self);
 
     char* path = NULL;
     if (!PyArg_ParseTuple(args, "s", &path)) {
@@ -15,7 +15,7 @@ PyObject* dir(PyObject* self, PyObject* args)
     std::vector<std::string> folders;
     std::vector<std::string> files;
 
-    int32_t ret = self_tc->m_dtype->dir(path, folders, files);
+    int32_t ret = self_fso->m_dtype->dir(path, folders, files);
     if (ret) {
         PyErr_SetObject(PyExc_RuntimeError, adsErrorStr(ret));
         return NULL;
@@ -43,5 +43,43 @@ PyObject* dir(PyObject* self, PyObject* args)
         PyList_SetItem(pyListFiles, j, pyFile);
     }
 
-    return  Py_BuildValue("OO", pyListFolders, pyListFiles);
+    return Py_BuildValue("OO", pyListFolders, pyListFiles);
+}
+
+PyObject* deleteFile(PyObject* self, PyObject* args)
+{
+    FsoType* self_fso = reinterpret_cast<FsoType*>(self);
+
+    char* path = NULL;
+    int bRecursive = false;
+
+    if (!PyArg_ParseTuple(args, "s|p", &path, &bRecursive)) {
+        return NULL;
+    }
+
+    int32_t ret = self_fso->m_dtype->deleteFile(path, bRecursive);
+    if (ret) {
+        PyErr_SetObject(PyExc_RuntimeError, adsErrorStr(ret));
+        return NULL;
+    }
+    Py_RETURN_NONE;
+}
+
+PyObject* mkdir(PyObject* self, PyObject* args)
+{
+    FsoType* self_fso = reinterpret_cast<FsoType*>(self);
+
+    char* path = NULL;
+    int bRecursive = false;
+
+    if (!PyArg_ParseTuple(args, "s|p", &path, &bRecursive)) {
+        return NULL;
+    }
+
+    int32_t ret = self_fso->m_dtype->mkdir(path, bRecursive);
+    if (ret) {
+        PyErr_SetObject(PyExc_RuntimeError, adsErrorStr(ret));
+        return NULL;
+    }
+    Py_RETURN_NONE;
 }
