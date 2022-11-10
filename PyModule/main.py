@@ -39,6 +39,12 @@ else:
 #tc.deleteAdsRoute('CX-50C9E8')
 
 folders, files = fs.dir(r'/usr/local/etc/TwinCAT/3.1/Boot/*')
-#test = fs.dir(r'/usr/local/etc/TwinCAT/3.1/Boot/*')
+
+print('>>> Folders: ')
+for _folder in folders:
+    print(_folder + '/')
+print('>>> Files')
+for _file in files:
+    print(_file)
 
 print('END')
