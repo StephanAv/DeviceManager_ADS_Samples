@@ -2,6 +2,7 @@
 #include "py_cpu.h"
 #include "py_twincat.h"
 #include "py_fso.h"
+#include "py_miscellaneous.h"
 
 PyModuleDef devman_module = {
     PyModuleDef_HEAD_INIT,
@@ -55,7 +56,7 @@ PyInit_DeviceManager(void) {
         return NULL;
     }
 
-    // Create and add File System Object Type
+    // Create and add File System Object type
     PyObject* fso_type = PyType_FromSpec(&FsoType_spec);
     if (fso_type == NULL) {
         decref(vDecr);
@@ -64,6 +65,19 @@ PyInit_DeviceManager(void) {
     vDecr.push_back(fso_type);
 
     if (PyModule_AddObject(module, "FileSystem", fso_type) < 0) {
+        decref(vDecr);
+        return NULL;
+    }
+
+    // Create and add Miscellaneous type
+    PyObject* misc_type = PyType_FromSpec(&MiscType_spec);
+    if (misc_type == NULL) {
+        decref(vDecr);
+        return NULL;
+    }
+    vDecr.push_back(misc_type);
+
+    if (PyModule_AddObject(module, "Miscellaneous", misc_type) < 0) {
         decref(vDecr);
         return NULL;
     }

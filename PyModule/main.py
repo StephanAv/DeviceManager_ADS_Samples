@@ -23,7 +23,8 @@ ipAddr   = "192.168.1.98"
 if os.name == 'nt': 
     #cpu = CPU(amsNetId)
     #tc  = TwinCAT(amsNetId)
-    fs   = FileSystem(amsNetId)
+    #fs   = FileSystem(amsNetId)
+    misc  = Miscellaneous(amsNetId)
 else:
     #cpu = CPU(amsNetId, ipAddr)
     #tc  = TwinCAT(amsNetId, ipAddr)
@@ -56,7 +57,8 @@ else:
 
 #fs.writeFile(r'C:\TwinCAT\3.1\Boot\TestRoutes.xml', r'C:\TwinCAT\3.1\Target\StaticRoutes.xml')
 
+#fs.copyFile(r'C:\TwinCAT\3.1\Boot\CurrentConfig.tszip', r'C:\TwinCAT\3.1\CurrentConfig_backup.tszip')
 
-fs.copyFile(r'C:\TwinCAT\3.1\Boot\CurrentConfig.tszip', r'C:\TwinCAT\3.1\CurrentConfig_backup.tszip')
+#misc.reboot()
 
 print('END')

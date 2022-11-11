@@ -3,8 +3,6 @@
 #include "py_fso.h"
 #include "ads_py_error.h"
 
-//#include <fstream>  
-
 PyObject* dir(PyObject* self, PyObject* args)
 {
     FsoType* self_fso = reinterpret_cast<FsoType*>(self);

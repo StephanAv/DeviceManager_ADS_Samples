@@ -14,7 +14,8 @@ find_package(PythonLibs REQUIRED)
 set(SRCS    devicemanager.cpp
             types/py_cpu.cpp
             types/py_twincat.cpp
-            types/py_fso.cpp           
+            types/py_fso.cpp
+            types/py_miscellaneous.cpp
 )
 
 add_library(PyDeviceManager SHARED ${SRCS})
