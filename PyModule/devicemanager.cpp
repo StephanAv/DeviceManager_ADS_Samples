@@ -3,6 +3,7 @@
 #include "py_twincat.h"
 #include "py_fso.h"
 #include "py_miscellaneous.h"
+#include "py_general.h"
 
 PyModuleDef devman_module = {
     PyModuleDef_HEAD_INIT,
@@ -78,6 +79,19 @@ PyInit_DeviceManager(void) {
     vDecr.push_back(misc_type);
 
     if (PyModule_AddObject(module, "Miscellaneous", misc_type) < 0) {
+        decref(vDecr);
+        return NULL;
+    }
+
+    // Create and add general area type
+    PyObject* gen_type = PyType_FromSpec(&GenType_spec);
+    if (gen_type == NULL) {
+        decref(vDecr);
+        return NULL;
+    }
+    vDecr.push_back(gen_type);
+
+    if (PyModule_AddObject(module, "General", gen_type) < 0) {
         decref(vDecr);
         return NULL;
     }

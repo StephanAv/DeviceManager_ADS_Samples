@@ -12,7 +12,6 @@ PyObject* reboot(PyObject* self, PyObject* args);
 
 static PyMethodDef MiscType_methods[] = {
     {"reboot", (PyCFunction)reboot, METH_NOARGS, "Reboot target system"},
-
     {NULL, NULL} /* Sentinel */
 };
 

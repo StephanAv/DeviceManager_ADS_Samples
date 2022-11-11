@@ -24,7 +24,8 @@ if os.name == 'nt':
     #cpu = CPU(amsNetId)
     #tc  = TwinCAT(amsNetId)
     #fs   = FileSystem(amsNetId)
-    misc  = Miscellaneous(amsNetId)
+    #misc  = Miscellaneous(amsNetId)
+    general = General(amsNetId)
 else:
     #cpu = CPU(amsNetId, ipAddr)
     #tc  = TwinCAT(amsNetId, ipAddr)
@@ -60,5 +61,8 @@ else:
 #fs.copyFile(r'C:\TwinCAT\3.1\Boot\CurrentConfig.tszip', r'C:\TwinCAT\3.1\CurrentConfig_backup.tszip')
 
 #misc.reboot()
+
+# General Area
+print(general.deviceName())
 
 print('END')
