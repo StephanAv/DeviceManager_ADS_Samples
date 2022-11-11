@@ -17,6 +17,7 @@ set(SRCS    devicemanager.cpp
             types/py_fso.cpp
             types/py_miscellaneous.cpp
             types/py_general.cpp
+            types/py_device.cpp
 )
 
 add_library(PyDeviceManager SHARED ${SRCS})

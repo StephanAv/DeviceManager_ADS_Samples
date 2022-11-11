@@ -25,7 +25,8 @@ if os.name == 'nt':
     #tc  = TwinCAT(amsNetId)
     #fs   = FileSystem(amsNetId)
     #misc  = Miscellaneous(amsNetId)
-    general = General(amsNetId)
+    #general = General(amsNetId)
+    device = Device(amsNetId)
 else:
     #cpu = CPU(amsNetId, ipAddr)
     #tc  = TwinCAT(amsNetId, ipAddr)
@@ -63,6 +64,9 @@ else:
 #misc.reboot()
 
 # General Area
-print(general.deviceName())
+#print(general.deviceName())
+
+# Device Area
+print(device.serialNumber())
 
 print('END')

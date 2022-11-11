@@ -4,6 +4,7 @@
 #include "py_fso.h"
 #include "py_miscellaneous.h"
 #include "py_general.h"
+#include "py_device.h"
 
 PyModuleDef devman_module = {
     PyModuleDef_HEAD_INIT,
@@ -92,6 +93,19 @@ PyInit_DeviceManager(void) {
     vDecr.push_back(gen_type);
 
     if (PyModule_AddObject(module, "General", gen_type) < 0) {
+        decref(vDecr);
+        return NULL;
+    }
+
+    // Create and add general device type
+    PyObject* device_type = PyType_FromSpec(&DeviceType_spec);
+    if (device_type == NULL) {
+        decref(vDecr);
+        return NULL;
+    }
+    vDecr.push_back(device_type);
+
+    if (PyModule_AddObject(module, "Device", device_type) < 0) {
         decref(vDecr);
         return NULL;
     }
