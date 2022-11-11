@@ -3,6 +3,8 @@
 #include "py_fso.h"
 #include "ads_py_error.h"
 
+//#include <fstream>  
+
 PyObject* dir(PyObject* self, PyObject* args)
 {
     FsoType* self_fso = reinterpret_cast<FsoType*>(self);
@@ -77,6 +79,93 @@ PyObject* mkdir(PyObject* self, PyObject* args)
     }
 
     int32_t ret = self_fso->m_dtype->mkdir(path, bRecursive);
+    if (ret) {
+        PyErr_SetObject(PyExc_RuntimeError, adsErrorStr(ret));
+        return NULL;
+    }
+    Py_RETURN_NONE;
+}
+
+PyObject* readFile(PyObject* self, PyObject* args)
+{
+    FsoType* self_fso = reinterpret_cast<FsoType*>(self);
+    char* targetFilePath = NULL;
+    char* localFilePath  = NULL;
+
+    if (!PyArg_ParseTuple(args, "ss", &targetFilePath, &localFilePath)) {
+        return NULL;
+    }
+
+    std::ofstream fileSink;
+    fileSink.exceptions(std::ifstream::badbit);
+
+    try {
+        fileSink.open(localFilePath, std::ios::binary);
+        int32_t ret = self_fso->m_dtype->readDeviceFile(targetFilePath, fileSink);
+        if (ret) {
+            PyErr_SetObject(PyExc_RuntimeError, adsErrorStr(ret));
+            return NULL;
+        }
+        fileSink.close();
+    }
+    catch (const std::ifstream::failure& e) {
+        PyErr_SetString(PyExc_IOError, e.what());
+        return NULL;
+    }
+    if (!fileSink) {
+        PyErr_SetString(PyExc_IOError, "Writing local file failed");
+        return NULL;
+    }
+
+    Py_RETURN_NONE;
+}
+
+PyObject* writeFile(PyObject* self, PyObject* args)
+{
+    FsoType* self_fso = reinterpret_cast<FsoType*>(self);
+
+    char* targetFilePath = NULL;
+    char* sourceFilePath = NULL;
+    if (!PyArg_ParseTuple(args, "ss", &targetFilePath, &sourceFilePath)) {
+        return NULL;
+    }
+
+    std::ifstream fileSource;
+    fileSource.exceptions(std::ifstream::badbit);
+    try {
+        fileSource.open(sourceFilePath, std::ios::binary);
+        int32_t ret = self_fso->m_dtype->writeDeviceFile(targetFilePath, fileSource);
+        if (ret) {
+            PyErr_SetObject(PyExc_RuntimeError, adsErrorStr(ret));
+            return NULL;
+        }
+        fileSource.close();
+    }
+    catch (const std::ifstream::failure& e) {
+        PyErr_SetString(PyExc_IOError, e.what());
+        return NULL;
+    }
+    if (!fileSource) {
+        PyErr_SetString(PyExc_IOError, "Reading from local file failed");
+        return NULL;
+    }
+
+    Py_RETURN_NONE;
+}
+
+PyObject* copyFile(PyObject* self, PyObject* args)
+{
+    FsoType* self_fso = reinterpret_cast<FsoType*>(self);
+    char* source = NULL;
+    char* destination = NULL;
+    uint32_t flags = 1;
+    
+
+    if (!PyArg_ParseTuple(args, "ss|I", &source, &destination, &flags)) {
+        return NULL;
+    }
+
+    int32_t ret = self_fso->m_dtype->copyDeviceFile(source, destination, flags);
     if (ret) {
         PyErr_SetObject(PyExc_RuntimeError, adsErrorStr(ret));
         return NULL;

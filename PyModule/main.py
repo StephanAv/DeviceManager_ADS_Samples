@@ -50,4 +50,13 @@ else:
 
 # fs.deleteFile(r'/usr/local/etc/TwinCAT/3.1/Boot/test.txt', False)
 #fs.mkdir(r'C:\TwinCAT\3.1\Boot\NewFolder')
+
+#localFile = os.path.expanduser(os.sep.join(['~','Downloads', 'CurrentConfig.tszip']))
+#fs.readFile(r'C:\TwinCAT\3.1\Boot\CurrentConfig.tszip', localFile)
+
+#fs.writeFile(r'C:\TwinCAT\3.1\Boot\TestRoutes.xml', r'C:\TwinCAT\3.1\Target\StaticRoutes.xml')
+
+
+fs.copyFile(r'C:\TwinCAT\3.1\Boot\CurrentConfig.tszip', r'C:\TwinCAT\3.1\CurrentConfig_backup.tszip')
+
 print('END')
