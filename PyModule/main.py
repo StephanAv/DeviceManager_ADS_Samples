@@ -18,7 +18,8 @@ print('Loaded DeviceManager binary: {}'.format(DeviceManager.__file__))
 
 amsNetId = "5.69.55.236.1.1"  # Windows 10
 #amsNetId = "5.80.201.232.1.1" # TwinCAT/BSD
-ipAddr   = "192.168.1.98"
+#ipAddr   = "192.168.1.98"
+ipAddr   = "192.168.1.102"
 
 if os.name == 'nt': 
     #cpu = CPU(amsNetId)
@@ -31,7 +32,15 @@ if os.name == 'nt':
 else:
     #cpu = CPU(amsNetId, ipAddr)
     #tc  = TwinCAT(amsNetId, ipAddr)
-    fs   = FileSystem(amsNetId, ipAddr)
+    #fs   = FileSystem(amsNetId, ipAddr) # tested
+    #mb = Mainboard(amsNetId, ipAddr)
+    #misc  = Miscellaneous(amsNetId, ipAddr)
+    #general = General(amsNetId, ipAddr)
+    device = Device(amsNetId, ipAddr)
+
+#######
+# CPU #
+#######
 
 # for attr in getmembers(cpu):
 #     print(attr)
@@ -40,8 +49,16 @@ else:
 #print('CPU usage: ' + str(cpu.getUsage()) + ' %')
 #print('CPU temperature: ' + str(cpu.getTemp()) + '°C')
 
+###########
+# TWINCAT #
+###########
+
 #print('TwinCAT version on target: ' + str(tc.getTcMajor()) + '.' + str(tc.getTcMinor()) + '.' + str(tc.getTcBuild()))
 #tc.deleteAdsRoute('CX-50C9E8')
+
+###############
+# FILE SYSTEM #
+###############
 
 #folders, files = fs.dir(r'/usr/local/etc/TwinCAT/3.1/Boot/*')
 
@@ -65,17 +82,22 @@ else:
 #############
 # MAINBOARD #
 #############
-print('Mainboard serila number: ' + mb.serialNumber())
-print('Mainboard minimal temperature: ' + str(mb.getMinTemp()) + '°C')
-print('Mainboard maximal temperature: ' + str(mb.getMaxTemp()) + '°C')
-print('Mainboard actual temperature: ' + str(mb.getTemp()) + '°C')
+#print('Mainboard serila number: ' + mb.serialNumber())
+#print('Mainboard minimal temperature: ' + str(mb.getMinTemp()) + '°C')
+#print('Mainboard maximal temperature: ' + str(mb.getMaxTemp()) + '°C')
+#print('Mainboard actual temperature: ' + str(mb.getTemp()) + '°C')
+
 #misc.reboot()
 
-# General Area
+################
+# GENERAL AREA #
+################
 #print(general.deviceName())
 
-# Device Area
-#print(device.serialNumber())
+################
+# DEVICE AREA #
+################
+print(device.serialNumber())
 
 
 
