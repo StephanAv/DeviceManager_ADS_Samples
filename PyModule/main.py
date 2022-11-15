@@ -24,9 +24,10 @@ if os.name == 'nt':
     #cpu = CPU(amsNetId)
     #tc  = TwinCAT(amsNetId)
     #fs   = FileSystem(amsNetId)
+    mb = Mainboard(amsNetId)
     #misc  = Miscellaneous(amsNetId)
     #general = General(amsNetId)
-    device = Device(amsNetId)
+    #device = Device(amsNetId)
 else:
     #cpu = CPU(amsNetId, ipAddr)
     #tc  = TwinCAT(amsNetId, ipAddr)
@@ -61,12 +62,22 @@ else:
 
 #fs.copyFile(r'C:\TwinCAT\3.1\Boot\CurrentConfig.tszip', r'C:\TwinCAT\3.1\CurrentConfig_backup.tszip')
 
+#############
+# MAINBOARD #
+#############
+print('Mainboard serila number: ' + mb.serialNumber())
+print('Mainboard minimal temperature: ' + str(mb.getMinTemp()) + '°C')
+print('Mainboard maximal temperature: ' + str(mb.getMaxTemp()) + '°C')
+print('Mainboard actual temperature: ' + str(mb.getTemp()) + '°C')
 #misc.reboot()
 
 # General Area
 #print(general.deviceName())
 
 # Device Area
-print(device.serialNumber())
+#print(device.serialNumber())
+
+
+
 
 print('END')

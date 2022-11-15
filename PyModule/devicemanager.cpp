@@ -2,6 +2,7 @@
 #include "py_cpu.h"
 #include "py_twincat.h"
 #include "py_fso.h"
+#include "py_mainboard.h"
 #include "py_miscellaneous.h"
 #include "py_general.h"
 #include "py_device.h"
@@ -67,6 +68,19 @@ PyInit_DeviceManager(void) {
     vDecr.push_back(fso_type);
 
     if (PyModule_AddObject(module, "FileSystem", fso_type) < 0) {
+        decref(vDecr);
+        return NULL;
+    }
+
+    // Create and add mainboard type
+    PyObject* mb_type = PyType_FromSpec(&MbType_spec);
+    if (mb_type == NULL) {
+        decref(vDecr);
+        return NULL;
+    }
+    vDecr.push_back(mb_type);
+
+    if (PyModule_AddObject(module, "Mainboard", mb_type) < 0) {
         decref(vDecr);
         return NULL;
     }

@@ -15,6 +15,7 @@ set(SRCS    devicemanager.cpp
             types/py_cpu.cpp
             types/py_twincat.cpp
             types/py_fso.cpp
+            types/py_mainboard.cpp
             types/py_miscellaneous.cpp
             types/py_general.cpp
             types/py_device.cpp
